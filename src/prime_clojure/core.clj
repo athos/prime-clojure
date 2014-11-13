@@ -1,8 +1,5 @@
 (ns prime-clojure.core
   (:require [clojure.tools.analyzer.jvm :refer [parse specials]]
-            [clojure.tools.analyzer.passes.jvm
-             [validate :refer [-validate]]]
-            [clojure.tools.emitter.jvm :as e]
             [clojure.tools.emitter.jvm.emit :refer [-emit]]))
 
 (alter-var-root #'specials conj 'asm)
