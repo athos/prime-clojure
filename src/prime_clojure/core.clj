@@ -1,6 +1,19 @@
-(ns prime-clojure.core)
+(ns prime-clojure.core
+  (:require [clojure.tools.analyzer.jvm :refer [parse specials]]
+            [clojure.tools.analyzer.passes.jvm
+             [validate :refer [-validate]]]
+            [clojure.tools.emitter.jvm :as e]
+            [clojure.tools.emitter.jvm.emit :refer [-emit]]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(alter-var-root #'specials conj 'asm)
+
+(defmethod parse 'asm [form env]
+  {:op :asm
+   :env env
+   :form form
+   :children []
+   :insns (vec (for [[op & args] (rest form)]
+                 `[~(keyword (name op)) ~@args]))})
+
+(defmethod -emit :asm [{:keys [insns]} frame]
+  insns)
